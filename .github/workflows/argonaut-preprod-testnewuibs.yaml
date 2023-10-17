@@ -13,15 +13,12 @@ on:
       - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
   workflow_dispatch:
 
-
-
 jobs:
   build:
-    
-    environment: 
-      name: preprod 
-    
-    runs-on: ubuntu-latest
+    environment:
+      name: preprod
+
+    runs-on: warp-ubuntu-latest-x64-2x
     name: Build and Push Img
     steps:
       - name: Get the version
@@ -30,7 +27,7 @@ jobs:
       - name: Fetch repo
         uses: actions/checkout@v2
         with:
-          submodules: 'recursive'
+          submodules: "recursive"
       - name: Get Short SHA
         id: get_sha
         run: echo ::set-output name=SHA_SHORT::$(git rev-parse --short HEAD)
@@ -94,10 +91,9 @@ jobs:
           docker_image_path: image.tar
 
   deploy:
-    
-    environment: 
-      name: preprod 
-    
+    environment:
+      name: preprod
+
     runs-on: ubuntu-latest
     name: Deploy to Argonaut
     needs: build
@@ -128,4 +124,4 @@ jobs:
             --set argonaut.region="us-east-2" \
             --set argonaut.cluster="preprod" \
             --set argonaut.serviceType="stateless" \
-            --set argonaut.imageRegistry="ecr" 
+            --set argonaut.imageRegistry="ecr"
